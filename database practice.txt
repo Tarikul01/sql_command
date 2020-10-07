@@ -1,0 +1,89 @@
+1: CREATE DATABASE practice;
+
+2.1: CRATE TABLE  student(id INT(11) primary key,name varchar(255),major varchar (255));
+2.2: CRATE TABLE  student(id INT(11) primary key,name varchar(255) NOT NULL,major varchar (255) UNIQUE,address varchar(255) DEFAULT 'Barisal');
+
+
+
+3: DESCRIBE student;
+4: DROP TABLE  student;
+
+5: ALTER TABLE  student ADD gpd DECIMAL(10,3);
+6: ALTER TABLE  student DROP COLUM gpa;
+6.1:ALTER TABLE employee ADD FOREIGN KEY(branch_id) REFERENCES branch(branch_id);
+
+7: INSERT INTO student VALUES(1,"JOHN","BIOLOGY");
+7.1:INSERT INTO student(id, name)VALUES(1,"jOHN");
+
+
+
+8: SELECT * FROM student;
+8.1:SELECT name,major FROM student;
+8.2:SELECT student.name,student.major FROM student ORDER BY name;
+8.3:SELECT student.name,student.major FROM student ORDER BY name DESC;
+8.4:SELECT * FROM student ORDER BY major, id;
+8.5: SELECT * FROM student LIMIT 2;
+8.6:SELECT * FROM student ORDER BY id LIMIT 2;
+8.7: SELECT * FROM student WHERE major = 'Chemistry';
+8.8:SELECT * FROM student WHERE major <> 'Chemistry';
+8.9:SELECT * FROM student WHERE id<4 AND major <>'Chemistry';
+8.10:SELECT * FROM student WHERE name IN ('Claire','kate','john');
+8.11:SELECT * FROM student WHERE name IN ('Claire','kate','john') AND id>2;
+8.12: SELECT first_name AS Forname AND last_name AS surename form employee;
+8.13: SELECT DISTINCT sex from employee;
+8.14: SELECT COUNT(emp_id)  FROM employee;
+8.15: select AVG(salary) from employee where sex='M';
+8.16: select count(sex), sex from employee Group By sex;
+8.17: select Sum(total_sales), client_id FROM  works_with group by emp_id;
+wild card
+8.18: SELECT * FROM client WHERE client_name LIKE '%LLC'; 
+8.19: SELECT * FROM client WHERE client_name LIKE '% lebel%';
+8.20: SELECT * FROM employee WHERE birtd_date LIKE '____-10%';
+
+
+10: UPDATE student SET major='Bio' WHERE major='Biology';
+10.1:UPDATE studetn SET major='Bio-chemistry' WHERE name='john' OR name='smith';
+10.2: UPDATE studetn SET name='tom',major='com sci' WHERE id=2;
+11: DELETE FROM student;
+11.1:DELETE FROM student WHERE ID=5;
+
+
+
+************UNION**************
+12:SELECT first_name	as company_name FROM employee UNION SELECT branch_name FROM branch;
+
+
+**************JOIN(**************
+13: SELECT employee.emp_id,employee.first_name,branch.branch_name FROM employee JOIN branch ON employee.id=branch.mgr_id;
+13.1:SELECT employee.emp_id,employee.first_name,branch.branch_name FROM employee LEFT JOIN branch ON employee.id=branch.mgr_id;
+13.3:SELECT employee.emp_id,employee.first_name,branch.branch_name FROM employee RIGHT JOIN branch ON employee.id=branch.mgr_id;
+13.4:SELECT employee.emp_id,employee.first_name,branch.branch_name FROM employee RIGHT JOIN branch ON employee.id=branch.mgr_id;
+
+**********NESTED QUERY************
+14:SELECT employee.first_name,employee.last_name FROM employee WHERE employee.emp_id IN (SELECT work_with.emp_id FROM work_with WHERE works_with.total_sales>300000);
+14.1: SELECT client.cleinet_name FROM client WHERE client.branch_id=(SELECT branch.branch_id FROM branch WHERE branch.mgr_id =102);
+************TRIGGER********************
+15:DELIMITER $$
+   CREATE
+          TRIGGER my_trigger BEFORE INSERT ON employee
+                  FOR EACH ROW BEGIN
+			INSERT INTO trigger_test VALUES(NEW.first_name);
+		END$$
+   DELIMITER;
+
+15.1:DELIMITER $$
+     CREATE
+          TRIGGER my_trigger BEFORE INSERT ON employee
+                  FOR EACH ROW BEGIN
+		 IF NEW.sex='M' THEN
+
+			INSERT INTO trigger_test VALUES('added male employee');
+		ELSEIF NEW.sex='M' THEN
+
+			INSERT INTO trigger_test VALUES('added male employee');
+               ELSE NEW.sex='M' THEN
+
+			INSERT INTO trigger_test VALUES('added male employee');
+		END IF;
+		END$$
+   DELIMITER;
